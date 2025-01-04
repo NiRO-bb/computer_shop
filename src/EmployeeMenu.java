@@ -4,9 +4,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class CustomerMenu extends Window {
+public class EmployeeMenu extends Window {
     private String login;
-    public CustomerMenu(String login) {
+
+    public EmployeeMenu(String login) {
         super("Главное меню");
 
         this.login = login;
@@ -38,10 +39,44 @@ public class CustomerMenu extends Window {
             }
         });
 
+        // кнопки - товары
         JButton catalogButton = new JButton("Открыть каталог");
         catalogButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // new Catalog();
+                //new Catalog();
+                dispose();
+            }
+        });
+
+        // кнопки - экземпляры
+        JButton addCopy = new JButton("Добавить запись");
+        addCopy.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //new AddProductCopy(login, null);
+                dispose();
+            }
+        });
+
+        JButton editCopy = new JButton("Изменить запись");
+        editCopy.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //new EditProductCopy(login);
+                dispose();
+            }
+        });
+
+        // кнопки - операции
+        JButton transactionAdd = new JButton("Новая операция");
+        transactionAdd.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //new AddTransaction(login);
+                dispose();
+            }
+        });
+        JButton transactionHistory = new JButton("История операций");
+        transactionHistory.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //new HistoryOfTransaction(login);
                 dispose();
             }
         });
@@ -52,9 +87,20 @@ public class CustomerMenu extends Window {
 
         gridPanel.add(new JLabel("Вернуться к авторизации:"));
         gridPanel.add(exitButton);
+        //gridPanel.add(Box.createVerticalStrut(10));
 
         gridPanel.add(new JLabel("Ассортимент:"));
         gridPanel.add(catalogButton);
+        //gridPanel.add(Box.createVerticalStrut(10));
+
+        gridPanel.add(new JLabel("Работа с товаром:"));
+        gridPanel.add(addCopy);
+        gridPanel.add(editCopy);
+        //gridPanel.add(Box.createVerticalStrut(10));
+
+        gridPanel.add(new JLabel("Операции:"));
+        gridPanel.add(transactionAdd);
+        gridPanel.add(transactionHistory);
 
         mainPanel.add(gridPanel);
 

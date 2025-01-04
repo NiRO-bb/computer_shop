@@ -67,7 +67,7 @@ public class Authorization extends Window {
                                break;
 
                            case "employee":
-                               // меню сотрудника
+                               new EmployeeMenu(user.login);
                                break;
 
                            case "none":
