@@ -83,8 +83,7 @@ public class Authorization extends Window {
                        pswdField.setText("");
                    }
                } catch(SQLException exception) {
-                   // call Notification
-                   System.out.println(exception);
+                   new Notification(exception.getMessage());
                }
            }
         });

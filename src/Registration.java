@@ -88,8 +88,7 @@ public class Registration extends Window{
                     confirmField.setText("");
                 }
                 catch (SQLException exception) {
-                    // call Notification
-                    System.out.println(exception);
+                    new Notification(exception.getMessage());
                 }
             }
         });
