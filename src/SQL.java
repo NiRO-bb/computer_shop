@@ -9,7 +9,7 @@ public class SQL {
     private static Statement statement;
 
     // Авторизация
-    public static User getUser(String login, String pswd) throws SQLException{
+    public static User getUser(String login, String pswd) throws SQLException {
         conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
         statement = conn.createStatement();
 
@@ -24,5 +24,30 @@ public class SQL {
 
         conn.close();
         return user;
+    }
+
+    // Регистрация
+    public static void addUser(String login, String password, String code) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        statement.executeUpdate("insert into users(login, password, code) values ('%s', '%s', '%s')".formatted(login, password, code));
+
+        conn.close();
+    }
+
+    // Занятость логина
+    public static boolean checkLogin(String login) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        ResultSet data = statement.executeQuery("select login from users where login = '%s'".formatted(login));
+
+        boolean isExist = false;
+        while(data.next())
+            isExist = true;
+
+        conn.close();
+        return isExist;
     }
 }
