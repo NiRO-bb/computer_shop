@@ -78,6 +78,7 @@ public class Registration extends Window{
                         SQL.addUser(loginField.getText(), pswdField.getText(), "none");
 
                         // открытие меню клиента
+                        new CustomerMenu(loginField.getText());
 
                         // закрытие окна
                         dispose();
