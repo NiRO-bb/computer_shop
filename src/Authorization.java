@@ -92,7 +92,8 @@ public class Authorization extends Window {
         JButton regButton = new JButton("Зарегистрироваться");
         regButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Переход в окно регистрации
+                new Registration();
+                dispose();
             }
         });
 
@@ -106,7 +107,7 @@ public class Authorization extends Window {
         mainPanel.add(pswdPanel);
         mainPanel.add(Box.createVerticalStrut(10));
         mainPanel.add(infoLabel);
-        mainPanel.add(Box.createVerticalStrut(20));
+        mainPanel.add(Box.createVerticalStrut(30));
         mainPanel.add(btnPanel);
 
         return mainPanel;
