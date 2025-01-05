@@ -89,7 +89,7 @@ public class Registration extends Window{
                     confirmField.setText("");
                 }
                 catch (SQLException exception) {
-                    new Notification(exception.getMessage());
+                    new Notification(exception.getMessage(), 0);
                 }
             }
         });

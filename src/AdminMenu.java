@@ -43,7 +43,7 @@ public class AdminMenu extends Window {
         JButton addProductButton = new JButton("Добавить товар");
         addProductButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // new AddProduct();
+                new AddProduct(login);
                 dispose();
             }
         });
