@@ -87,16 +87,13 @@ public class EmployeeMenu extends Window {
 
         gridPanel.add(new JLabel("Вернуться к авторизации:"));
         gridPanel.add(exitButton);
-        //gridPanel.add(Box.createVerticalStrut(10));
 
         gridPanel.add(new JLabel("Ассортимент:"));
         gridPanel.add(catalogButton);
-        //gridPanel.add(Box.createVerticalStrut(10));
 
         gridPanel.add(new JLabel("Работа с товаром:"));
         gridPanel.add(addCopy);
         gridPanel.add(editCopy);
-        //gridPanel.add(Box.createVerticalStrut(10));
 
         gridPanel.add(new JLabel("Операции:"));
         gridPanel.add(transactionAdd);

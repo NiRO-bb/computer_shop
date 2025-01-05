@@ -63,7 +63,7 @@ public class Authorization extends Window {
                        // проверка кода доступа
                        switch (user.code) {
                            case "admin":
-                               // меню администрации
+                               new AdminMenu(user.login);
                                break;
 
                            case "employee":
