@@ -1,3 +1,4 @@
+import java.math.RoundingMode;
 import java.sql.*;
 
 public class SQL {
@@ -49,5 +50,15 @@ public class SQL {
 
         conn.close();
         return isExist;
+    }
+
+    // Добавить новый товар
+    public static void addProduct(String id, String type, String model, String manufacturer, double price) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        statement.executeUpdate("insert into product(id, type, model, manufacturer, price) values('%s', '%s', '%s', '%s', '%s')".formatted(id, type, model, manufacturer, price));
+
+        conn.close();
     }
 }
