@@ -1,5 +1,6 @@
 import java.math.RoundingMode;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class SQL {
     private static String URL = "jdbc:mysql://localhost:3306/niro_bb";
@@ -70,5 +71,76 @@ public class SQL {
         statement.executeUpdate("insert into shop(id, city, street, building) values('%s', '%s', '%s', '%s')".formatted(id, city, street, building));
 
         conn.close();
+    }
+
+    // Получить список магазинов
+    public static ArrayList<Shop> getShopList() throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        ArrayList<Shop> shops = new ArrayList<>();
+
+        ResultSet data = statement.executeQuery("select * from shop");
+        while (data.next()) {
+            shops.add(new Shop(data.getString("id"),
+                    data.getString("city"),
+                    data.getString("street"),
+                    data.getInt("building")));
+        }
+
+        conn.close();
+        return shops;
+    }
+
+    // Получить список товаров
+    public static ArrayList<Product> getProductList() throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        ArrayList<Product> products = new ArrayList<>();
+
+        ResultSet data = statement.executeQuery("select * from product");
+        while (data.next()) {
+            products.add(new Product(data.getString("id"),
+                    data.getString("type"),
+                    data.getString("model"),
+                    data.getString("manufacturer"),
+                    data.getDouble("price")));
+        }
+
+        conn.close();
+        return products;
+    }
+
+    // Добавить новую операцию
+    public static void addTransaction(String type, String shopId, String productId, int amount, String responsible) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        statement.executeUpdate("insert into transaction(type, shop_id, product_id, amount, responsible) values('%s', '%s', '%s', '%s', '%s')".formatted(type, shopId, productId, amount, responsible));
+
+        conn.close();
+    }
+
+    // Получить id сотрудника по логину
+    public static Employee getEmployee(String login) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        Employee employee = null;
+
+        ResultSet data = statement.executeQuery("select * from employee where login = '%s'".formatted(login));
+
+        while (data.next()) {
+            employee = new Employee(data.getString("id"),
+                    data.getString("shop_id"),
+                    data.getString("full_name"),
+                    data.getString("post"),
+                    data.getInt("salary"),
+                    data.getString("login"));
+        }
+
+        conn.close();
+        return employee;
     }
 }
