@@ -77,7 +77,7 @@ public class AdminMenu extends Window {
         JButton addTransactionButton = new JButton("Новая операция");
         addTransactionButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // new AddTransaction();
+                new AddTransaction(login);
                 dispose();
             }
         });

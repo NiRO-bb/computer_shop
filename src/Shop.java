@@ -11,4 +11,8 @@ public class Shop {
         this.street = street;
         this.building = building;
     }
+
+    public String getId() {
+        return id;
+    }
 }

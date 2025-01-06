@@ -13,4 +13,8 @@ public class Product {
         this.manufacturer = manufacturer;
         this.price = price;
     }
+
+    public String getId() {
+        return id;
+    }
 }

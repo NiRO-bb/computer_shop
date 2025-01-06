@@ -15,4 +15,8 @@ public class Employee {
         this.salary = salary;
         this.login = login;
     }
+
+    public String getId() {
+        return id;
+    }
 }
