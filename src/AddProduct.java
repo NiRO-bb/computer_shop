@@ -3,7 +3,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 
 public class AddProduct extends Window {
     private String login;
@@ -104,7 +103,7 @@ public class AddProduct extends Window {
                     factoryField.setText("");
                     priceField.setText("");
                 }
-                catch(SQLException exception) {
+                catch(Exception exception) {
                     new Notification(exception.getMessage(), 0);
                 }
             }

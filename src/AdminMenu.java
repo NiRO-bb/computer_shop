@@ -60,7 +60,7 @@ public class AdminMenu extends Window {
         JButton addShopButton = new JButton("Добавить магазин");
         addShopButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //new AddShop();
+                new AddShop(login);
                 dispose();
             }
         });

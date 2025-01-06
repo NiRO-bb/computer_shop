@@ -3,7 +3,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.SQLException;
 
 public class Registration extends Window{
     public Registration(){
@@ -88,7 +87,7 @@ public class Registration extends Window{
                     pswdField.setText("");
                     confirmField.setText("");
                 }
-                catch (SQLException exception) {
+                catch (Exception exception) {
                     new Notification(exception.getMessage(), 0);
                 }
             }
