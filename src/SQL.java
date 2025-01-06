@@ -61,4 +61,14 @@ public class SQL {
 
         conn.close();
     }
+
+    // Добавить новый магазин
+    public static void addShop(String id, String city, String street, int building) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        statement.executeUpdate("insert into shop(id, city, street, building) values('%s', '%s', '%s', '%s')".formatted(id, city, street, building));
+
+        conn.close();
+    }
 }
