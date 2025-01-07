@@ -143,4 +143,14 @@ public class SQL {
         conn.close();
         return employee;
     }
+
+    // Добавить сотрудника
+    public static void addEmployee(String id, String shopId, String name, String post, int salary, String login) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        statement.executeUpdate("insert into employee(id, shop_id, full_name, post, salary, login) values('%s', '%s', '%s', '%s', '%s', '%s')".formatted(id, shopId, name, post, salary, login));
+
+        conn.close();
+    }
 }
