@@ -34,8 +34,8 @@ public class AdminMenu extends Window {
         JButton exitButton = new JButton("Выйти");
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                dispose();
                 new Authorization();
+                dispose();
             }
         });
 
@@ -94,7 +94,7 @@ public class AdminMenu extends Window {
         JButton addEmployeeButton = new JButton("Новый сотрудник");
         addEmployeeButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // new AddEmployee();
+                new AddEmployee(login);
                 dispose();
             }
         });
