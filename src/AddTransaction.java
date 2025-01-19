@@ -47,7 +47,10 @@ public class AddTransaction extends Window {
         shopPanel.setLayout(new BoxLayout(shopPanel, 0));
 
         ArrayList<Shop> shops = null;
-        try { shops = SQL.getShopList(); }
+        try {
+            for (Object obj : SQL.getShopList())
+                shops.add((Shop) obj);
+        }
         catch (Exception e) { new Notification(e.getMessage(), 0); }
 
         JComboBox shopBox = new JComboBox(shops.stream().map(shop -> shop.getId()).toArray(String[]::new));
@@ -61,7 +64,10 @@ public class AddTransaction extends Window {
         productPanel.setLayout(new BoxLayout(productPanel, 0));
 
         ArrayList<Product> products = null;
-        try { products = SQL.getProductList(); }
+        try {
+            for (Object obj : SQL.getProductList())
+                products.add((Product)obj);
+        }
         catch (Exception e) { new Notification(e.getMessage(), 0); }
 
         JComboBox productBox = new JComboBox(products.stream().map(prod -> prod.id).toArray(String[]::new));

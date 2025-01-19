@@ -51,7 +51,7 @@ public class AdminMenu extends Window {
         JButton productListButton = new JButton("Список товаров");
         productListButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // new Catalog();
+                new Catalog(login);
                 dispose();
             }
         });
@@ -68,7 +68,7 @@ public class AdminMenu extends Window {
         JButton shopListButton = new JButton("Список магазинов");
         shopListButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // new ShopList();
+                new ShopList(login);
                 dispose();
             }
         });
@@ -85,7 +85,7 @@ public class AdminMenu extends Window {
         JButton transactionHistoryButton = new JButton("История операций");
         transactionHistoryButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // new HistoryOfTransaction();
+                new HistoryOfTransaction(login);
                 dispose();
             }
         });
@@ -102,23 +102,7 @@ public class AdminMenu extends Window {
         JButton employeeListButton = new JButton("Список сотрудников");
         employeeListButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // new EmployeeList();
-                dispose();
-            }
-        });
-
-        // кнопки - отчеты
-        JButton productReportButton = new JButton("Отчет по товарам");
-        productReportButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // new reportProduct();
-                dispose();
-            }
-        });
-        JButton salesReportButton = new JButton("Отчет по продажам");
-        salesReportButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                // new reportSales();
+                new EmployeeList(login);
                 dispose();
             }
         });
@@ -145,10 +129,6 @@ public class AdminMenu extends Window {
         gridPanel.add(new JLabel("Сотрудники:"));
         gridPanel.add(addEmployeeButton);
         gridPanel.add(employeeListButton);
-
-        gridPanel.add(new JLabel("Отчеты:"));
-        gridPanel.add(productReportButton);
-        gridPanel.add(salesReportButton);
 
         mainPanel.add(gridPanel);
 
