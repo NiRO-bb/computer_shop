@@ -74,11 +74,11 @@ public class SQL {
     }
 
     // Получить список магазинов
-    public static ArrayList<Shop> getShopList() throws SQLException {
+    public static ArrayList<Object> getShopList() throws SQLException {
         conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
         statement = conn.createStatement();
 
-        ArrayList<Shop> shops = new ArrayList<>();
+        ArrayList<Object> shops = new ArrayList<>();
 
         ResultSet data = statement.executeQuery("select * from shop");
         while (data.next()) {
@@ -93,11 +93,11 @@ public class SQL {
     }
 
     // Получить список товаров
-    public static ArrayList<Product> getProductList() throws SQLException {
+    public static ArrayList<Object> getProductList() throws SQLException {
         conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
         statement = conn.createStatement();
 
-        ArrayList<Product> products = new ArrayList<>();
+        ArrayList<Object> products = new ArrayList<>();
 
         ResultSet data = statement.executeQuery("select * from product");
         while (data.next()) {
@@ -112,14 +112,46 @@ public class SQL {
         return products;
     }
 
-    // Добавить новую операцию
-    public static void addTransaction(String type, String shopId, String productId, int amount, String responsible) throws SQLException {
+    // Получить список операций
+    public static ArrayList<Object> getTransactionList() throws SQLException {
         conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
         statement = conn.createStatement();
 
-        statement.executeUpdate("insert into transaction(type, shop_id, product_id, amount, responsible) values('%s', '%s', '%s', '%s', '%s')".formatted(type, shopId, productId, amount, responsible));
+        ArrayList<Object> transactions = new ArrayList<>();
+
+        ResultSet data = statement.executeQuery("select * from transaction");
+        while (data.next()) {
+            transactions.add(new Transaction(data.getInt("id"),
+                    data.getString("type"),
+                    data.getString("shop_id"),
+                    data.getString("product_id"),
+                    data.getInt("amount"),
+                    data.getString("responsible")));
+        }
 
         conn.close();
+        return transactions;
+    }
+
+    // Получить список сотрудников
+    public static ArrayList<Object> getEmployeeList() throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        ArrayList<Object> employees = new ArrayList<>();
+
+        ResultSet data = statement.executeQuery("select * from employee");
+        while (data.next()) {
+            employees.add(new Employee(data.getString("id"),
+                    data.getString("shop_id"),
+                    data.getString("full_name"),
+                    data.getString("post"),
+                    data.getInt("salary"),
+                    data.getString("login")));
+        }
+
+        conn.close();
+        return employees;
     }
 
     // Получить id сотрудника по логину
@@ -142,6 +174,16 @@ public class SQL {
 
         conn.close();
         return employee;
+    }
+
+    // Добавить новую операцию
+    public static void addTransaction(String type, String shopId, String productId, int amount, String responsible) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        statement.executeUpdate("insert into transaction(type, shop_id, product_id, amount, responsible) values('%s', '%s', '%s', '%s', '%s')".formatted(type, shopId, productId, amount, responsible));
+
+        conn.close();
     }
 
     // Добавить сотрудника

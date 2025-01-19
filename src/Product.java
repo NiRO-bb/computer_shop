@@ -17,4 +17,8 @@ public class Product {
     public String getId() {
         return id;
     }
+
+    public String toString() {
+        return "%s %s - %s".formatted(type, model, price);
+    }
 }

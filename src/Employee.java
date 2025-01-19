@@ -19,4 +19,8 @@ public class Employee {
     public String getId() {
         return id;
     }
+
+    public String toString() {
+        return "ID - %s, магазин - %s, ФИО - %s, должность - %s, зарплата - %s руб., логин - %s".formatted(id, shopId, name, post, salary, login);
+    }
 }

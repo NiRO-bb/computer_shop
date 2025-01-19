@@ -15,4 +15,8 @@ public class Transaction {
         this.amount = amount;
         this.responsible = responsible;
     }
+
+    public String toString() {
+        return "ID - %s, %s, магазин - %s, товар - %s, кол-во - %s, ответственный - %s".formatted(id, type, shopId, productId, amount, responsible);
+    }
 }
