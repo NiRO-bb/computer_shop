@@ -97,8 +97,7 @@ public class Catalog extends Window {
             JButton infoButton = new JButton("Подробнее");
             infoButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    // new ProductInfo(login);
-                    dispose();
+                    new ProductInfo(p);
                 }
             });
 

@@ -1,6 +1,6 @@
-import java.math.RoundingMode;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class SQL {
     private static String URL = "jdbc:mysql://localhost:3306/niro_bb";
@@ -86,6 +86,35 @@ public class SQL {
                     data.getString("city"),
                     data.getString("street"),
                     data.getInt("building")));
+        }
+
+        conn.close();
+        return shops;
+    }
+    public static ArrayList<Shop> getShopList(Product product) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        ArrayList<Shop> shops = new ArrayList<>();
+
+        ResultSet data = statement.executeQuery("select * from shop inner join product_copy on shop.id = product_copy.shop_id where product_copy.product_id = '%s'".formatted(product.id));
+
+        while (data.next()) {
+            Shop shop = new Shop(data.getString("id"),
+                    data.getString("city"),
+                    data.getString("street"),
+                    data.getInt("building"));
+
+            boolean isAdded = false;
+
+            for (Shop s : shops) {
+                if (s.toString().equals(shop.toString())) {
+                    isAdded = true;
+                    break;
+                }
+            }
+
+            if (!isAdded) shops.add(shop);
         }
 
         conn.close();
