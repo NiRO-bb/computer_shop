@@ -79,11 +79,14 @@ public class ShopList extends Window {
         return mainPanel;
     }
 
-    void createList(JPanel panel, ArrayList<Object> products, int pointer) {
+    void createList(JPanel panel, ArrayList<Object> shops, int pointer) {
         panel.removeAll();
 
         int count = 0;
-        for (; pointer - 1 + count < products.size() && count < 10; count++) {
+        for (; pointer - 1 + count < shops.size() && count < 10; count++) {
+            // конкретный элемент
+            Shop s = (Shop) shops.get(pointer - 1 + count);
+
             // панель элемента
             JPanel prodPanel = new JPanel();
             prodPanel.setLayout(new BoxLayout(prodPanel, 1));
@@ -93,7 +96,31 @@ public class ShopList extends Window {
 
             JButton infoButton = new JButton("Подробнее");
             JButton removeButton = new JButton("Удалить");
+            removeButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        SQL.deleteShop(s.id);
+
+                        new Notification("Был удален магазин - г. %s, ул. %s, д. %s".formatted(s.city, s.street, s.building) , 1);
+
+                        // обновление списка
+                        shops.remove(s);
+                        createList(panel, shops, pointer);
+                        pack();
+                    }
+                    catch(Exception exception) {
+                        new Notification(exception.getMessage(), 0);
+                    }
+                }
+            });
+
             JButton editButton = new JButton("Изменить");
+            editButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    new AddShop(login, s);
+                    dispose();
+                }
+            });
 
             buttonPanel.add(infoButton);
             buttonPanel.add(Box.createHorizontalStrut(5));
@@ -103,7 +130,7 @@ public class ShopList extends Window {
             buttonPanel.add(Box.createGlue());
 
             // сборка панели
-            prodPanel.add(addDesc(products.get(pointer - 1 + count), pointer + count));
+            prodPanel.add(addDesc(shops.get(pointer - 1 + count), pointer + count));
             prodPanel.add(buttonPanel);
             prodPanel.add(Box.createVerticalStrut(10));
 
@@ -112,17 +139,17 @@ public class ShopList extends Window {
 
         // добавление кнопок переключения
         // кнопки только для списков с количеством элементов большим 10
-        if (products.size() > 10) {
+        if (shops.size() > 10) {
             int finalPointer = pointer + count + 1;
             JPanel buttonPanel = new JPanel();
 
             JButton nextButton = new JButton(">");
             nextButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    if (pointer != 1 && finalPointer >= products.size()) {
+                    if (pointer != 1 && finalPointer >= shops.size()) {
 
                     } else {
-                        createList(panel, products, pointer + 10);
+                        createList(panel, shops, pointer + 10);
                         pack();
                     }
                 }
@@ -134,7 +161,7 @@ public class ShopList extends Window {
                     if (pointer == 1) {
 
                     } else {
-                        createList(panel, products, pointer - 10);
+                        createList(panel, shops, pointer - 10);
                         pack();
                     }
                 }

@@ -6,11 +6,29 @@ import java.awt.event.ActionListener;
 
 public class AddShop extends Window {
     private String login;
+    private Shop shop = new Shop();
+    private boolean editMode = false;
 
+    // конструктор для добавления магазина
     public AddShop(String login) {
         super("Добавление магазина");
 
         this.login = login;
+
+        // добавление содержимого
+        getContentPane().add(CreateContent());
+        // установка размеров окна
+        pack();
+    }
+
+    // конструктор для изменения магазина
+    public AddShop(String login, Shop shop) {
+        super("Изменение магазина");
+
+        editMode = true;
+
+        this.login = login;
+        this.shop = shop;
 
         // добавление содержимого
         getContentPane().add(CreateContent());
@@ -35,6 +53,7 @@ public class AddShop extends Window {
         idPanel.setLayout(new BoxLayout(idPanel, 0));
 
         JTextField idField = new JTextField(10);
+        idField.setText(shop.id);
 
         idPanel.add(new JLabel("ID магазина:"));
         idPanel.add(Box.createHorizontalStrut(5));
@@ -45,6 +64,7 @@ public class AddShop extends Window {
         cityPanel.setLayout(new BoxLayout(cityPanel, 0));
 
         JTextField cityField = new JTextField(10);
+        cityField.setText(shop.city);
 
         cityPanel.add(new JLabel("Город:"));
         cityPanel.add(Box.createHorizontalStrut(5));
@@ -55,6 +75,7 @@ public class AddShop extends Window {
         streetPanel.setLayout(new BoxLayout(streetPanel, 0));
 
         JTextField streetField = new JTextField(10);
+        streetField.setText(shop.street);
 
         streetPanel.add(new JLabel("Улица:"));
         streetPanel.add(Box.createHorizontalStrut(5));
@@ -65,6 +86,7 @@ public class AddShop extends Window {
         buildPanel.setLayout(new BoxLayout(buildPanel, 0));
 
         JTextField buildField = new JTextField(10);
+        buildField.setText(String.valueOf(shop.building));
 
         buildPanel.add(new JLabel("Здание:"));
         buildPanel.add(Box.createHorizontalStrut(5));
@@ -74,16 +96,25 @@ public class AddShop extends Window {
         JPanel btnPanel = new JPanel();
         btnPanel.setLayout(new BoxLayout(btnPanel, 0));
 
-        JButton addButton = new JButton("Добавить магазин");
+        JButton addButton = new JButton(!editMode ? "Добавить магазин" : "Изменить магазин");
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    SQL.addShop(idField.getText(),
-                            cityField.getText(),
-                            streetField.getText(),
-                            Integer.parseInt(buildField.getText()));
+                    if (!editMode) {
+                        SQL.addShop(idField.getText(),
+                                cityField.getText(),
+                                streetField.getText(),
+                                Integer.parseInt(buildField.getText()));
 
-                    new Notification("Был добавлен магазин - " + idField.getText(), 1);
+                        new Notification("Был добавлен магазин - " + idField.getText(), 1);
+                    } else {
+                        SQL.editShop(new Shop(idField.getText(),
+                                cityField.getText(),
+                                streetField.getText(),
+                                Integer.parseInt(buildField.getText())), shop.id);
+
+                        new Notification("Был изменен магазин - " + shop.toString(), 1);
+                    }
 
                     // очистка полей
                     idField.setText("");
@@ -100,7 +131,9 @@ public class AddShop extends Window {
         JButton exitButton = new JButton("Назад");
         exitButton.addActionListener(new ActionListener() {
            public void actionPerformed(ActionEvent e) {
-               new AdminMenu(login);
+               if (!editMode) new AdminMenu(login);
+               else new ShopList(login);
+
                dispose();
            }
         });
