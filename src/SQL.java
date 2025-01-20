@@ -235,12 +235,32 @@ public class SQL {
         conn.close();
     }
 
+    // Удалить магазин
+    public static void deleteShop(String id) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        statement.executeUpdate("delete from shop where id = '%s'".formatted(id));
+
+        conn.close();
+    }
+
     // Изменить товар
     public static void editProduct(Product p, String id) throws SQLException {
         conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
         statement = conn.createStatement();
 
         statement.executeUpdate("update `product` set `id` = '%s', `type` = '%s', `model` = '%s', `manufacturer` = '%s', `price` = '%s' where `id` = '%s'".formatted(p.id, p.type, p.model, p.manufacturer, p.price, id));
+
+        conn.close();
+    }
+
+    // Изменить магазин
+    public static void editShop(Shop s, String id) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        statement.executeUpdate("update `shop` set `id` = '%s', `city` = '%s', `street` = '%s', `building` = '%s' where `id` = '%s'".formatted(s.id, s.city, s.street, s.building, id));
 
         conn.close();
     }

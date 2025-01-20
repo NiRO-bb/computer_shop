@@ -52,7 +52,7 @@ public class AddEmployee extends Window {
         }
         catch (Exception e) { new Notification(e.getMessage(), 0); }
 
-        JComboBox shopBox = new JComboBox(shops.stream().map(shop -> shop.getId()).toArray(String[]::new));
+        JComboBox shopBox = new JComboBox(shops.stream().map(shop -> shop.id).toArray(String[]::new));
 
         shopPanel.add(new JLabel("ID магазина:"));
         shopPanel.add(Box.createHorizontalStrut(5));
