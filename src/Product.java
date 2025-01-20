@@ -6,6 +6,8 @@ public class Product {
     String manufacturer;
     double price;
 
+    public Product() {}
+
     public Product (String id, String type, String model, String manufacturer, double price) {
         this.id = id;
         this.type = type;

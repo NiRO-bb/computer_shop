@@ -6,7 +6,8 @@ import java.awt.event.ActionListener;
 
 public class AddProduct extends Window {
     private String login;
-    private Product product = null;
+    private Product product = new Product();
+    private boolean editMode = false;
 
     // конструктор для добавления продукта
     public AddProduct(String login) {
@@ -23,6 +24,8 @@ public class AddProduct extends Window {
     // конструктор для изменения продукта
     public AddProduct(String login, Product product) {
         super("Изменение товара");
+
+        editMode = true;
 
         this.login = login;
         this.product = product;
@@ -104,11 +107,11 @@ public class AddProduct extends Window {
         JPanel btnPanel = new JPanel();
         btnPanel.setLayout(new BoxLayout(btnPanel, 0));
 
-        JButton addButton = new JButton(product == null ? "Добавить товар" : "Изменить товар");
+        JButton addButton = new JButton(!editMode ? "Добавить товар" : "Изменить товар");
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    if (product == null) {
+                    if (!editMode) {
                         SQL.addProduct(idField.getText(),
                                 typeField.getText(),
                                 modelField.getText(),
@@ -142,7 +145,7 @@ public class AddProduct extends Window {
         JButton exitButton = new JButton("Назад");
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                if (product == null) new AdminMenu(login);
+                if (!editMode) new AdminMenu(login);
                 else new Catalog(login);
 
                 dispose();
