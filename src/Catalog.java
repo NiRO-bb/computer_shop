@@ -84,6 +84,9 @@ public class Catalog extends Window {
 
         int count = 0;
         for (; pointer - 1 + count < products.size() && count < 10; count++) {
+            // Конкретный элемент
+            Product p = (Product)products.get(pointer - 1 + count);
+
             // панель элемента
             JPanel prodPanel = new JPanel();
             prodPanel.setLayout(new BoxLayout(prodPanel, 1));
@@ -92,8 +95,39 @@ public class Catalog extends Window {
             JPanel buttonPanel = new JPanel();
 
             JButton infoButton = new JButton("Подробнее");
+            infoButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    // new ProductInfo(login);
+                    dispose();
+                }
+            });
+
             JButton removeButton = new JButton("Удалить");
+            removeButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        SQL.deleteProduct(p.id);
+
+                        new Notification("Был удален товар - %s %s".formatted(p.type, p.model) , 1);
+
+                        // обновление списка
+                        products.remove(p);
+                        createList(panel, products, pointer);
+                        pack();
+                    }
+                    catch(Exception exception) {
+                        new Notification(exception.getMessage(), 0);
+                    }
+                }
+            });
+
             JButton editButton = new JButton("Изменить");
+            editButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    new AddProduct(login, p);
+                    dispose();
+                }
+            });
 
             buttonPanel.add(infoButton);
             buttonPanel.add(Box.createHorizontalStrut(5));
