@@ -17,4 +17,8 @@ public class Shop {
     public String toString() {
         return "ID - %s, г. %s, ул. %s, д. %s".formatted(id, city, street, building);
     }
+
+    public String getId() {
+        return id;
+    }
 }

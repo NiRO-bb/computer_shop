@@ -152,7 +152,7 @@ public class Catalog extends Window {
             JButton nextButton = new JButton(">");
             nextButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    if (pointer != 1 && finalPointer >= products.size()) {
+                    if (pointer != 1 && finalPointer > products.size() + 1) {
 
                     } else {
                         createList(panel, products, pointer + 10);

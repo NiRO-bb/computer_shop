@@ -46,14 +46,14 @@ public class AddTransaction extends Window {
         JPanel shopPanel = new JPanel();
         shopPanel.setLayout(new BoxLayout(shopPanel, 0));
 
-        ArrayList<Shop> shops = null;
+        ArrayList<Shop> shops = new ArrayList<>();
         try {
             for (Object obj : SQL.getShopList())
                 shops.add((Shop) obj);
         }
         catch (Exception e) { new Notification(e.getMessage(), 0); }
 
-        JComboBox shopBox = new JComboBox(shops.stream().map(shop -> shop.id).toArray(String[]::new));
+        JComboBox shopBox = new JComboBox(shops.stream().map(shop -> shop.getId()).toArray(String[]::new));
 
         shopPanel.add(new JLabel("ID магазина:"));
         shopPanel.add(Box.createHorizontalStrut(5));
@@ -63,7 +63,7 @@ public class AddTransaction extends Window {
         JPanel productPanel = new JPanel();
         productPanel.setLayout(new BoxLayout(productPanel, 0));
 
-        ArrayList<Product> products = null;
+        ArrayList<Product> products = new ArrayList<>();
         try {
             for (Object obj : SQL.getProductList())
                 products.add((Product)obj);

@@ -146,7 +146,7 @@ public class ShopList extends Window {
             JButton nextButton = new JButton(">");
             nextButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    if (pointer != 1 && finalPointer >= shops.size()) {
+                    if (pointer != 1 && finalPointer > shops.size() + 1) {
 
                     } else {
                         createList(panel, shops, pointer + 10);

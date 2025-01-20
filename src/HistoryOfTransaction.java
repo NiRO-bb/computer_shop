@@ -79,17 +79,17 @@ public class HistoryOfTransaction extends Window {
         return mainPanel;
     }
 
-    void createList(JPanel panel, ArrayList<Object> products, int pointer) {
+    void createList(JPanel panel, ArrayList<Object> transactions, int pointer) {
         panel.removeAll();
 
         int count = 0;
-        for (; pointer - 1 + count < products.size() && count < 10; count++) {
+        for (; pointer - 1 + count < transactions.size() && count < 10; count++) {
             // панель элемента
             JPanel prodPanel = new JPanel();
             prodPanel.setLayout(new BoxLayout(prodPanel, 1));
 
             // сборка панели
-            prodPanel.add(addDesc(products.get(pointer - 1 + count), pointer + count));
+            prodPanel.add(addDesc(transactions.get(pointer - 1 + count), pointer + count));
             prodPanel.add(Box.createVerticalStrut(10));
 
             panel.add(prodPanel);
@@ -97,17 +97,17 @@ public class HistoryOfTransaction extends Window {
 
         // добавление кнопок переключения
         // кнопки только для списков с количеством элементов большим 10
-        if (products.size() > 10) {
+        if (transactions.size() > 10) {
             int finalPointer = pointer + count + 1;
             JPanel buttonPanel = new JPanel();
 
             JButton nextButton = new JButton(">");
             nextButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    if (pointer != 1 && finalPointer >= products.size()) {
+                    if (pointer != 1 && finalPointer > transactions.size() + 1) {
 
                     } else {
-                        createList(panel, products, pointer + 10);
+                        createList(panel, transactions, pointer + 10);
                         pack();
                     }
                 }
@@ -119,7 +119,7 @@ public class HistoryOfTransaction extends Window {
                     if (pointer == 1) {
 
                     } else {
-                        createList(panel, products, pointer - 10);
+                        createList(panel, transactions, pointer - 10);
                         pack();
                     }
                 }

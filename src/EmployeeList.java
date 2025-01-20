@@ -80,11 +80,14 @@ public class EmployeeList extends Window {
         return mainPanel;
     }
 
-    void createList(JPanel panel, ArrayList<Object> products, int pointer) {
+    void createList(JPanel panel, ArrayList<Object> employees, int pointer) {
         panel.removeAll();
 
         int count = 0;
-        for (; pointer - 1 + count < products.size() && count < 10; count++) {
+        for (; pointer - 1 + count < employees.size() && count < 10; count++) {
+            // конкретный элемент
+            Employee employee = (Employee)employees.get(pointer - 1 + count);
+
             // панель элемента
             JPanel prodPanel = new JPanel();
             prodPanel.setLayout(new BoxLayout(prodPanel, 1));
@@ -93,7 +96,31 @@ public class EmployeeList extends Window {
             JPanel buttonPanel = new JPanel();
 
             JButton removeButton = new JButton("Удалить");
+            removeButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        SQL.deleteEmployee(employee.id);
+
+                        new Notification("Был удален сотрудник - %s - %s".formatted(employee.name, employee.post) , 1);
+
+                        // обновление списка
+                        employees.remove(employee);
+                        createList(panel, employees, pointer);
+                        pack();
+                    }
+                    catch(Exception exception) {
+                        new Notification(exception.getMessage(), 0);
+                    }
+                }
+            });
+
             JButton editButton = new JButton("Изменить");
+            editButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    new AddEmployee(login, employee);
+                    dispose();
+                }
+            });
 
             buttonPanel.add(removeButton);
             buttonPanel.add(Box.createHorizontalStrut(5));
@@ -101,7 +128,7 @@ public class EmployeeList extends Window {
             buttonPanel.add(Box.createGlue());
 
             // сборка панели
-            prodPanel.add(addDesc(products.get(pointer - 1 + count), pointer + count));
+            prodPanel.add(addDesc(employees.get(pointer - 1 + count), pointer + count));
             prodPanel.add(buttonPanel);
             prodPanel.add(Box.createVerticalStrut(10));
 
@@ -110,17 +137,17 @@ public class EmployeeList extends Window {
 
         // добавление кнопок переключения
         // кнопки только для списков с количеством элементов большим 10
-        if (products.size() > 10) {
+        if (employees.size() > 10) {
             int finalPointer = pointer + count + 1;
             JPanel buttonPanel = new JPanel();
 
             JButton nextButton = new JButton(">");
             nextButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    if (pointer != 1 && finalPointer >= products.size()) {
+                    if (pointer != 1 && finalPointer > employees.size() + 1) {
 
                     } else {
-                        createList(panel, products, pointer + 10);
+                        createList(panel, employees, pointer + 10);
                         pack();
                     }
                 }
@@ -132,7 +159,7 @@ public class EmployeeList extends Window {
                     if (pointer == 1) {
 
                     } else {
-                        createList(panel, products, pointer - 10);
+                        createList(panel, employees, pointer - 10);
                         pack();
                     }
                 }
