@@ -245,6 +245,16 @@ public class SQL {
         conn.close();
     }
 
+    // Удалить сотрудника
+    public static void deleteEmployee(String id) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        statement.executeUpdate("delete from employee where id = '%s'".formatted(id));
+
+        conn.close();
+    }
+
     // Изменить товар
     public static void editProduct(Product p, String id) throws SQLException {
         conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
@@ -261,6 +271,16 @@ public class SQL {
         statement = conn.createStatement();
 
         statement.executeUpdate("update `shop` set `id` = '%s', `city` = '%s', `street` = '%s', `building` = '%s' where `id` = '%s'".formatted(s.id, s.city, s.street, s.building, id));
+
+        conn.close();
+    }
+
+    // Изменить информацию о сотруднике
+    public static void editEmployee(Employee e, String id) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        statement.executeUpdate("update `employee` set `id` = '%s', `shop_id` = '%s', `full_name` = '%s', `post` = '%s', `salary` = '%s' where `id` = '%s'".formatted(e.id, e.shopId, e.name, e.post, e.salary, id));
 
         conn.close();
     }
