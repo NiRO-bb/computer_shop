@@ -10,7 +10,7 @@ public class ShopMenu extends Window {
     private Shop shop;
 
     public ShopMenu(String login, Shop shop) {
-        super("Список магазинов");
+        super("Меню магазина");
 
         this.login = login;
         this.shop = shop;
@@ -79,7 +79,7 @@ public class ShopMenu extends Window {
         JButton addButton = new JButton("Добавить запись об экземпляре");
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // new AddProductCopy(login, shop);
+                new AddProductCopy(login, shop);
                 dispose();
             }
         });
@@ -144,17 +144,7 @@ public class ShopMenu extends Window {
                 }
             });
 
-            JButton editButton = new JButton("Изменить");
-            editButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    //new AddProductCopy(login, p);
-                    dispose();
-                }
-            });
-
             buttonPanel.add(removeButton);
-            buttonPanel.add(Box.createHorizontalStrut(5));
-            buttonPanel.add(editButton);
             buttonPanel.add(Box.createGlue());
 
             // сборка панели

@@ -71,6 +71,8 @@ public class HistoryOfTransaction extends Window {
             }
         });
 
+        exitButton.setAlignmentX(CENTER_ALIGNMENT);
+
         // сборка интерфейса
         mainPanel.add(searchPanel);
         mainPanel.add(listPanel);
