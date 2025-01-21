@@ -3,7 +3,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class Catalog extends Window {
     private String login;
@@ -74,6 +73,7 @@ public class Catalog extends Window {
             public void actionPerformed(ActionEvent e) {
                 if (code.equals("admin")) new AdminMenu(login);
                 else if (code.equals("employee")) new EmployeeMenu(login);
+                else new CustomerMenu(login);
 
                 dispose();
             }

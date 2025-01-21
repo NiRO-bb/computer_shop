@@ -33,15 +33,15 @@ public class CustomerMenu extends Window {
         JButton exitButton = new JButton("Выйти");
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                dispose();
                 new Authorization();
+                dispose();
             }
         });
 
         JButton catalogButton = new JButton("Открыть каталог");
         catalogButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // new Catalog();
+                new Catalog(login);
                 dispose();
             }
         });
