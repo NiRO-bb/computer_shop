@@ -1,16 +1,19 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class ShopList extends Window {
+public class ShopMenu extends Window {
     private String login;
+    private Shop shop;
 
-    public ShopList(String login) {
+    public ShopMenu(String login, Shop shop) {
         super("Список магазинов");
 
         this.login = login;
+        this.shop = shop;
 
         // добавление содержимого
         getContentPane().add(CreateContent());
@@ -27,15 +30,15 @@ public class ShopList extends Window {
         // установка границ
         mainPanel.setBorder(new EmptyBorder(15, 15, 15, 15));
 
-        // список магазинов
+        // список товаров
         JPanel listPanel = new JPanel();
         listPanel.setLayout(new BoxLayout(listPanel, 1));
 
-        ArrayList<Object> shops = null;
-        try { shops = SQL.getShopList(); }
+        ArrayList<Object> copies = new ArrayList<>();
+        try { copies = SQL.getProductCopyList(shop); }
         catch (Exception e) { new Notification(e.getMessage(), 0); }
 
-        createList(listPanel, shops, 1);
+        createList(listPanel, copies, 1);
 
         // строка поиска
         JPanel searchPanel = new JPanel();
@@ -44,48 +47,76 @@ public class ShopList extends Window {
         JTextField searchField = new JTextField(20);
 
         JButton searchButton = new JButton("Найти");
-        ArrayList<Object> finalShops = shops;
+        ArrayList<Object> finalCopies = copies;
         searchButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // поиск
-                ArrayList<Object> newShops = search(searchField, finalShops);
+                ArrayList<Object> newProducts = search(searchField, finalCopies);
 
                 // показать результаты поиска
-                createList(listPanel, newShops, 1);
+                createList(listPanel, newProducts, 1);
                 pack();
             }
         });
 
-        searchPanel.add(new JLabel("Введите адрес магазина:"));
+        searchPanel.add(new JLabel("Введите данные экземпляра:"));
         searchPanel.add(Box.createHorizontalStrut(5));
         searchPanel.add(searchField);
         searchPanel.add(Box.createHorizontalStrut(5));
         searchPanel.add(searchButton);
 
-        // кнопка
+        // кнопки
+        JPanel buttonPanel = new JPanel();
+
         JButton exitButton = new JButton("Назад");
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new AdminMenu(login);
+                new ShopList(login);
                 dispose();
             }
         });
 
+        JButton addButton = new JButton("Добавить запись об экземпляре");
+        addButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // new AddProductCopy(login, shop);
+                dispose();
+            }
+        });
+
+        buttonPanel.add(exitButton);
+        buttonPanel.add(Box.createHorizontalStrut(5));
+        buttonPanel.add(addButton);
+
         // сборка интерфейса
+        JPanel shopPanel = new JPanel();
+        shopPanel.add(new JLabel("Магазин: " + shop.toString()));
+        shopPanel.add(Box.createGlue());
+
+        mainPanel.add(shopPanel);
+        mainPanel.add(Box.createVerticalStrut(15));
+
+        JPanel labelPanel = new JPanel();
+        labelPanel.add(new JLabel("Работа с ассортиментом магазина"));
+        labelPanel.add(Box.createGlue());
+
+        mainPanel.add(labelPanel);
+        mainPanel.add(Box.createVerticalStrut(5));
         mainPanel.add(searchPanel);
         mainPanel.add(listPanel);
-        mainPanel.add(exitButton);
+        mainPanel.add(Box.createVerticalStrut(10));
+        mainPanel.add(buttonPanel);
 
         return mainPanel;
     }
 
-    void createList(JPanel panel, ArrayList<Object> shops, int pointer) {
+    void createList(JPanel panel, ArrayList<Object> copies, int pointer) {
         panel.removeAll();
 
         int count = 0;
-        for (; pointer - 1 + count < shops.size() && count < 10; count++) {
-            // конкретный элемент
-            Shop s = (Shop) shops.get(pointer - 1 + count);
+        for (; pointer - 1 + count < copies.size() && count < 10; count++) {
+            // Конкретный элемент
+            ProductCopy p = (ProductCopy)copies.get(pointer - 1 + count);
 
             // панель элемента
             JPanel prodPanel = new JPanel();
@@ -94,25 +125,17 @@ public class ShopList extends Window {
             // кнопки
             JPanel buttonPanel = new JPanel();
 
-            JButton infoButton = new JButton("Подробнее");
-            infoButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    new ShopMenu(login, s);
-                    dispose();
-                }
-            });
-
             JButton removeButton = new JButton("Удалить");
             removeButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     try {
-                        SQL.deleteShop(s.id);
+                        SQL.deleteProductCopy(p);
 
-                        new Notification("Был удален магазин - г. %s, ул. %s, д. %s".formatted(s.city, s.street, s.building) , 1);
+                        new Notification("Был удален экземпляр товара - %s".formatted(p.toString()) , 1);
 
                         // обновление списка
-                        shops.remove(s);
-                        createList(panel, shops, pointer);
+                        copies.remove(p);
+                        createList(panel, copies, pointer);
                         pack();
                     }
                     catch(Exception exception) {
@@ -124,20 +147,18 @@ public class ShopList extends Window {
             JButton editButton = new JButton("Изменить");
             editButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    new AddShop(login, s);
+                    //new AddProductCopy(login, p);
                     dispose();
                 }
             });
 
-            buttonPanel.add(infoButton);
-            buttonPanel.add(Box.createHorizontalStrut(5));
             buttonPanel.add(removeButton);
             buttonPanel.add(Box.createHorizontalStrut(5));
             buttonPanel.add(editButton);
             buttonPanel.add(Box.createGlue());
 
             // сборка панели
-            prodPanel.add(addDesc(shops.get(pointer - 1 + count), pointer + count));
+            prodPanel.add(addDesc(copies.get(pointer - 1 + count), pointer + count));
             prodPanel.add(buttonPanel);
             prodPanel.add(Box.createVerticalStrut(10));
 
@@ -146,17 +167,17 @@ public class ShopList extends Window {
 
         // добавление кнопок переключения
         // кнопки только для списков с количеством элементов большим 10
-        if (shops.size() > 10) {
+        if (copies.size() > 10) {
             int finalPointer = pointer + count + 1;
             JPanel buttonPanel = new JPanel();
 
             JButton nextButton = new JButton(">");
             nextButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    if (pointer != 1 && finalPointer > shops.size() + 1) {
+                    if (pointer != 1 && finalPointer > copies.size() + 1) {
 
                     } else {
-                        createList(panel, shops, pointer + 10);
+                        createList(panel, copies, pointer + 10);
                         pack();
                     }
                 }
@@ -168,7 +189,7 @@ public class ShopList extends Window {
                     if (pointer == 1) {
 
                     } else {
-                        createList(panel, shops, pointer - 10);
+                        createList(panel, copies, pointer - 10);
                         pack();
                     }
                 }
