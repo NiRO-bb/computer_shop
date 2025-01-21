@@ -9,7 +9,22 @@ public class SQL {
     private static Connection conn;
     private static Statement statement;
 
-    // Авторизация
+    // Получить код доступа пользователя по логину
+    public static User getUser(String login) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        ResultSet data = statement.executeQuery("select * from users where login = '%s'".formatted(login));
+
+        User user = null;
+        while (data.next()) {
+            user = new User(data.getString("login"), data.getString("password"), data.getString("code"));
+        }
+
+        conn.close();
+        return user;
+    }
+    // Проверить соответствие логина и пароля при авторизации
     public static User getUser(String login, String pswd) throws SQLException {
         conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
         statement = conn.createStatement();
@@ -25,6 +40,22 @@ public class SQL {
 
         conn.close();
         return user;
+    }
+
+    // Получить id магазина по логину
+    public static Shop getUserShop(String login) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        ResultSet data = statement.executeQuery("select * from shop inner join employee on shop.id = employee.shop_id where login = '%s'".formatted(login));
+
+        Shop shop = null;
+        while (data.next()) {
+            shop = new Shop(data.getString("id"), data.getString("city"), data.getString("street"), data.getInt("building"));
+        }
+
+        conn.close();
+        return shop;
     }
 
     // Регистрация
@@ -120,6 +151,7 @@ public class SQL {
         conn.close();
         return shops;
     }
+    // Получить список магазинов по id продукта
     public static ArrayList<Shop> getShopList(Product product) throws SQLException {
         conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
         statement = conn.createStatement();
@@ -177,8 +209,6 @@ public class SQL {
 
         ArrayList<Object> copies = new ArrayList<>();
 
-        System.out.println("Shop_id = " + shop.id);
-
         ResultSet data = statement.executeQuery("select * from product_copy where shop_id = '%s'".formatted(shop.id));
         while (data.next()) {
             copies.add(new ProductCopy(data.getString("article"),
@@ -198,6 +228,26 @@ public class SQL {
         ArrayList<Object> transactions = new ArrayList<>();
 
         ResultSet data = statement.executeQuery("select * from transaction");
+        while (data.next()) {
+            transactions.add(new Transaction(data.getInt("id"),
+                    data.getString("type"),
+                    data.getString("shop_id"),
+                    data.getString("product_id"),
+                    data.getInt("amount"),
+                    data.getString("responsible")));
+        }
+
+        conn.close();
+        return transactions;
+    }
+    // Получить список операций по id магазина
+    public static ArrayList<Object> getTransactionList(Shop shop) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        ArrayList<Object> transactions = new ArrayList<>();
+
+        ResultSet data = statement.executeQuery("select * from transaction where shop_id = '%s'".formatted(shop.id));
         while (data.next()) {
             transactions.add(new Transaction(data.getInt("id"),
                     data.getString("type"),

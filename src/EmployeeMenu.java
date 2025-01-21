@@ -34,8 +34,8 @@ public class EmployeeMenu extends Window {
         JButton exitButton = new JButton("Выйти");
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                dispose();
                 new Authorization();
+                dispose();
             }
         });
 
@@ -43,7 +43,7 @@ public class EmployeeMenu extends Window {
         JButton catalogButton = new JButton("Открыть каталог");
         catalogButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //new Catalog();
+                new Catalog(login);
                 dispose();
             }
         });
@@ -52,15 +52,15 @@ public class EmployeeMenu extends Window {
         JButton addCopy = new JButton("Добавить запись");
         addCopy.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //new AddProductCopy(login, null);
+                new AddProductCopy(login);
                 dispose();
             }
         });
 
-        JButton editCopy = new JButton("Изменить запись");
-        editCopy.addActionListener(new ActionListener() {
+        JButton shopMenuButton = new JButton("Ассортимент магазина");
+        shopMenuButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //new EditProductCopy(login);
+                new ShopMenu(login);
                 dispose();
             }
         });
@@ -69,14 +69,14 @@ public class EmployeeMenu extends Window {
         JButton transactionAdd = new JButton("Новая операция");
         transactionAdd.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //new AddTransaction(login);
+                new AddTransaction(login);
                 dispose();
             }
         });
         JButton transactionHistory = new JButton("История операций");
         transactionHistory.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                //new HistoryOfTransaction(login);
+                new HistoryOfTransaction(login);
                 dispose();
             }
         });
@@ -93,7 +93,7 @@ public class EmployeeMenu extends Window {
 
         gridPanel.add(new JLabel("Работа с товаром:"));
         gridPanel.add(addCopy);
-        gridPanel.add(editCopy);
+        gridPanel.add(shopMenuButton);
 
         gridPanel.add(new JLabel("Операции:"));
         gridPanel.add(transactionAdd);

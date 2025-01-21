@@ -8,8 +8,23 @@ import java.util.ArrayList;
 public class AddProductCopy extends Window {
     private String login;
     private Shop shop;
+    private boolean adminMode = true;
 
-    // конструктор для добавления продукта
+    public AddProductCopy(String login) {
+        super("Добавление экземпляра");
+
+        adminMode = false;
+
+        this.login = login;
+        try { this.shop = SQL.getUserShop(login); }
+        catch (Exception e) { new Notification(e.getMessage(), 0); }
+
+        // добавление содержимого
+        getContentPane().add(CreateContent());
+        // установка размеров окна
+        pack();
+    }
+
     public AddProductCopy(String login, Shop shop) {
         super("Добавление экземпляра");
 
@@ -58,7 +73,9 @@ public class AddProductCopy extends Window {
         JButton exitButton = new JButton("Назад");
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new ShopMenu(login, shop);
+                if (adminMode) new ShopMenu(login, shop);
+                else new EmployeeMenu(login);
+
                 dispose();
             }
         });

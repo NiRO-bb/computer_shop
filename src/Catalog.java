@@ -3,14 +3,20 @@ import javax.swing.border.EmptyBorder;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class Catalog extends Window {
     private String login;
+    private String code;
 
     public Catalog(String login) {
         super("Каталог товаров");
 
         this.login = login;
+
+        // проверка кода пользователя
+        try { code = SQL.getUser(login).code; }
+        catch (Exception e) { new Notification(e.getMessage(), 0); }
 
         // добавление содержимого
         getContentPane().add(CreateContent());
@@ -66,7 +72,9 @@ public class Catalog extends Window {
         JButton exitButton = new JButton("Назад");
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new AdminMenu(login);
+                if (code.equals("admin")) new AdminMenu(login);
+                else if (code.equals("employee")) new EmployeeMenu(login);
+
                 dispose();
             }
         });
@@ -131,10 +139,12 @@ public class Catalog extends Window {
             });
 
             buttonPanel.add(infoButton);
-            buttonPanel.add(Box.createHorizontalStrut(5));
-            buttonPanel.add(removeButton);
-            buttonPanel.add(Box.createHorizontalStrut(5));
-            buttonPanel.add(editButton);
+            if (code.equals("admin")) {
+                buttonPanel.add(Box.createHorizontalStrut(5));
+                buttonPanel.add(removeButton);
+                buttonPanel.add(Box.createHorizontalStrut(5));
+                buttonPanel.add(editButton);
+            }
             buttonPanel.add(Box.createGlue());
 
             // сборка панели

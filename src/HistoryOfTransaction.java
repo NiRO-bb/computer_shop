@@ -6,11 +6,16 @@ import java.util.ArrayList;
 
 public class HistoryOfTransaction extends Window {
     private String login;
+    private String code;
 
     public HistoryOfTransaction(String login) {
         super("История операций");
 
         this.login = login;
+
+        // проверка кода пользователя
+        try { code = SQL.getUser(login).code; }
+        catch (Exception e) { new Notification(e.getMessage(), 0); }
 
         // добавление содержимого
         getContentPane().add(CreateContent());
@@ -32,7 +37,9 @@ public class HistoryOfTransaction extends Window {
         listPanel.setLayout(new BoxLayout(listPanel, 1));
 
         ArrayList<Object> transactions = null;
-        try { transactions = SQL.getTransactionList(); }
+        try {
+            transactions = code.equals("admin") ? SQL.getTransactionList() : SQL.getTransactionList(SQL.getUserShop(login));
+        }
         catch (Exception e) { new Notification(e.getMessage(), 0); }
 
         createList(listPanel, transactions, 1);
@@ -66,7 +73,9 @@ public class HistoryOfTransaction extends Window {
         JButton exitButton = new JButton("Назад");
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new AdminMenu(login);
+                if (code.equals("admin")) new AdminMenu(login);
+                else new EmployeeMenu(login);
+
                 dispose();
             }
         });

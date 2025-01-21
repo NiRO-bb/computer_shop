@@ -7,11 +7,16 @@ import java.util.ArrayList;
 
 public class AddTransaction extends Window {
     private String login;
+    private String code;
 
     public AddTransaction(String login) {
         super("Добавление магазина");
 
         this.login = login;
+
+        // проверка кода пользователя
+        try { code = SQL.getUser(login).code; }
+        catch (Exception e) { new Notification(e.getMessage(), 0); }
 
         // добавление содержимого
         getContentPane().add(CreateContent());
@@ -94,8 +99,10 @@ public class AddTransaction extends Window {
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
+                    String shop = code.equals("admin") ? shopBox.getSelectedItem().toString() : SQL.getUserShop(login).id;
+
                     SQL.addTransaction(typeBox.getSelectedItem().toString(),
-                            shopBox.getSelectedItem().toString(),
+                            shop,
                             productBox.getSelectedItem().toString(),
                             Integer.parseInt(amountField.getText()),
                             SQL.getEmployee(login).getId());
@@ -114,7 +121,9 @@ public class AddTransaction extends Window {
         JButton exitButton = new JButton("Назад");
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new AdminMenu(login);
+                if (code.equals("admin")) new AdminMenu(login);
+                else new EmployeeMenu(login);
+
                 dispose();
             }
         });
@@ -126,7 +135,7 @@ public class AddTransaction extends Window {
         // сборка интерфейса
         gridPanel.add(new JLabel("Введите данные операции"));
         gridPanel.add(typePanel);
-        gridPanel.add(shopPanel);
+        if (code.equals("admin")) gridPanel.add(shopPanel);
         gridPanel.add(productPanel);
         gridPanel.add(amountPanel);
         gridPanel.add(Box.createVerticalStrut(10));

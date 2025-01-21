@@ -1,6 +1,5 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -8,6 +7,22 @@ import java.util.ArrayList;
 public class ShopMenu extends Window {
     private String login;
     private Shop shop;
+    private boolean adminMode = true;
+
+    public ShopMenu(String login) {
+        super("Меню магазина");
+
+        adminMode = false;
+
+        this.login = login;
+        try { this.shop = SQL.getUserShop(login); }
+        catch (Exception e) { new Notification(e.getMessage(), 0); }
+
+        // добавление содержимого
+        getContentPane().add(CreateContent());
+        // установка размеров окна
+        pack();
+    }
 
     public ShopMenu(String login, Shop shop) {
         super("Меню магазина");
@@ -71,7 +86,9 @@ public class ShopMenu extends Window {
         JButton exitButton = new JButton("Назад");
         exitButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new ShopList(login);
+                if (adminMode) new ShopList(login);
+                else new EmployeeMenu(login);
+
                 dispose();
             }
         });
@@ -79,7 +96,9 @@ public class ShopMenu extends Window {
         JButton addButton = new JButton("Добавить запись об экземпляре");
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new AddProductCopy(login, shop);
+                if (adminMode) new AddProductCopy(login, shop);
+                else new AddProductCopy(login);
+
                 dispose();
             }
         });
