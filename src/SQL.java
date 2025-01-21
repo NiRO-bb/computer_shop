@@ -1,6 +1,5 @@
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class SQL {
     private static String URL = "jdbc:mysql://localhost:3306/niro_bb";
@@ -141,6 +140,26 @@ public class SQL {
         return products;
     }
 
+    // Получить список экземпляров
+    public static ArrayList<Object> getProductCopyList(Shop shop) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        ArrayList<Object> copies = new ArrayList<>();
+
+        System.out.println("Shop_id = " + shop.id);
+
+        ResultSet data = statement.executeQuery("select * from product_copy where shop_id = '%s'".formatted(shop.id));
+        while (data.next()) {
+            copies.add(new ProductCopy(data.getString("article"),
+                    data.getString("product_id"),
+                    data.getString("shop_id")));
+        }
+
+        conn.close();
+        return copies;
+    }
+
     // Получить список операций
     public static ArrayList<Object> getTransactionList() throws SQLException {
         conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
@@ -231,6 +250,16 @@ public class SQL {
         statement = conn.createStatement();
 
         statement.executeUpdate("delete from product where id = '%s'".formatted(id));
+
+        conn.close();
+    }
+
+    // Удалить экземпляр товара
+    public static void deleteProductCopy(ProductCopy copy) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        statement.executeUpdate("delete from product_copy where article = '%s'".formatted(copy.article));
 
         conn.close();
     }

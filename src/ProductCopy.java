@@ -9,4 +9,8 @@ public class ProductCopy {
         this.productId = productId;
         this.shopId = shopId;
     }
+
+    public String toString () {
+        return "Арт. %s, ID продукта - %s, ID магазина - %s".formatted(article, productId, shopId);
+    }
 }
