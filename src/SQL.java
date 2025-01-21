@@ -62,6 +62,36 @@ public class SQL {
         conn.close();
     }
 
+    // Добавить новый экземпляр товара
+    public static String addProductCopy(Shop shop, String productId) throws SQLException {
+        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        statement = conn.createStatement();
+
+        // получить список артикулов для конкретного товара данного магазина
+        ResultSet data = statement.executeQuery("select article from product_copy where product_id = '%s' and shop_id = '%s'".formatted(productId, shop.getId()));
+
+        // найти минимальный свободный артикул, чтобы автоматически назначить его новому экземпляру
+        int num = 0;
+        ArrayList<Integer> nums = new ArrayList<>();
+        while (data.next()) {
+            String[] articleArray = data.getString("article").split("_");
+            nums.add(Integer.parseInt(articleArray[2]));
+        }
+
+        while (true) {
+            if (!nums.contains(++num)) {
+                break;
+            }
+        }
+
+        // добавить экземпляр в бд
+        String article = "%s_%s_%s".formatted(shop.id, productId, num);
+        statement.executeUpdate("insert into product_copy(article, product_id, shop_id) values('%s', '%s', '%s')".formatted(article, productId, shop.id));
+
+        conn.close();
+        return article;
+    }
+
     // Добавить новый магазин
     public static void addShop(String id, String city, String street, int building) throws SQLException {
         conn = DriverManager.getConnection(URL, dbUsername, dbPassword);

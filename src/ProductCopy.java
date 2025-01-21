@@ -4,6 +4,8 @@ public class ProductCopy {
     String productId;
     String shopId;
 
+    public ProductCopy() {};
+
     public ProductCopy (String article, String productId, String shopId) {
         this.article = article;
         this.productId = productId;
