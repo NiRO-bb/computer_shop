@@ -84,7 +84,7 @@ public class AddProductCopy extends Window {
         addButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 try {
-                    String article = SQL.addProductCopy(shop, productBox.getSelectedItem().toString());
+                    String article = SQL.addProductCopy(shop.id, productBox.getSelectedItem().toString());
 
                     new Notification("Был добавлен экземпляр - " + article, 1);
                 }

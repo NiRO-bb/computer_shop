@@ -2,16 +2,19 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class SQL {
-    private static String URL = "jdbc:mysql://localhost:3306/niro_bb";
-    private static String dbUsername = "niro_bb";
-    private static String dbPassword = "2034";
+    //private static String URL = "jdbc:mysql://localhost:3306/niro_bb";
+    //private static String dbUsername = "niro_bb";
+    //private static String dbPassword = "2034";
+
+    private static String URL = "jdbc:h2:C:/Users/nikita/IdeaProjects/DB project/db/stockExchange";
 
     private static Connection conn;
     private static Statement statement;
 
     // Получить код доступа пользователя по логину
     public static User getUser(String login) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         ResultSet data = statement.executeQuery("select * from users where login = '%s'".formatted(login));
@@ -26,7 +29,8 @@ public class SQL {
     }
     // Проверить соответствие логина и пароля при авторизации
     public static User getUser(String login, String pswd) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         User user = null;
@@ -44,7 +48,8 @@ public class SQL {
 
     // Получить id магазина по логину
     public static Shop getUserShop(String login) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         ResultSet data = statement.executeQuery("select * from shop inner join employee on shop.id = employee.shop_id where login = '%s'".formatted(login));
@@ -60,7 +65,8 @@ public class SQL {
 
     // Регистрация
     public static void addUser(String login, String password, String code) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         statement.executeUpdate("insert into users(login, password, code) values ('%s', '%s', '%s')".formatted(login, password, code));
@@ -70,7 +76,8 @@ public class SQL {
 
     // Занятость логина
     public static boolean checkLogin(String login) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         ResultSet data = statement.executeQuery("select login from users where login = '%s'".formatted(login));
@@ -85,7 +92,8 @@ public class SQL {
 
     // Добавить новый товар
     public static void addProduct(String id, String type, String model, String manufacturer, double price) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         statement.executeUpdate("insert into product(id, type, model, manufacturer, price) values('%s', '%s', '%s', '%s', '%s')".formatted(id, type, model, manufacturer, price));
@@ -94,12 +102,13 @@ public class SQL {
     }
 
     // Добавить новый экземпляр товара
-    public static String addProductCopy(Shop shop, String productId) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+    public static String addProductCopy(String shopId, String productId) throws SQLException {
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         // получить список артикулов для конкретного товара данного магазина
-        ResultSet data = statement.executeQuery("select article from product_copy where product_id = '%s' and shop_id = '%s'".formatted(productId, shop.getId()));
+        ResultSet data = statement.executeQuery("select article from product_copy where product_id = '%s' and shop_id = '%s'".formatted(productId, shopId));
 
         // найти минимальный свободный артикул, чтобы автоматически назначить его новому экземпляру
         int num = 0;
@@ -116,8 +125,8 @@ public class SQL {
         }
 
         // добавить экземпляр в бд
-        String article = "%s_%s_%s".formatted(shop.id, productId, num);
-        statement.executeUpdate("insert into product_copy(article, product_id, shop_id) values('%s', '%s', '%s')".formatted(article, productId, shop.id));
+        String article = "%s_%s_%s".formatted(shopId, productId, num);
+        statement.executeUpdate("insert into product_copy(article, product_id, shop_id) values('%s', '%s', '%s')".formatted(article, productId, shopId));
 
         conn.close();
         return article;
@@ -125,7 +134,8 @@ public class SQL {
 
     // Добавить новый магазин
     public static void addShop(String id, String city, String street, int building) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         statement.executeUpdate("insert into shop(id, city, street, building) values('%s', '%s', '%s', '%s')".formatted(id, city, street, building));
@@ -135,7 +145,8 @@ public class SQL {
 
     // Получить список магазинов
     public static ArrayList<Object> getShopList() throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         ArrayList<Object> shops = new ArrayList<>();
@@ -153,7 +164,8 @@ public class SQL {
     }
     // Получить список магазинов по id продукта
     public static ArrayList<Shop> getShopList(Product product) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         ArrayList<Shop> shops = new ArrayList<>();
@@ -184,7 +196,8 @@ public class SQL {
 
     // Получить список товаров
     public static ArrayList<Object> getProductList() throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         ArrayList<Object> products = new ArrayList<>();
@@ -204,7 +217,8 @@ public class SQL {
 
     // Получить список экземпляров
     public static ArrayList<Object> getProductCopyList(Shop shop) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         ArrayList<Object> copies = new ArrayList<>();
@@ -222,7 +236,8 @@ public class SQL {
 
     // Получить список операций
     public static ArrayList<Object> getTransactionList() throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         ArrayList<Object> transactions = new ArrayList<>();
@@ -242,7 +257,8 @@ public class SQL {
     }
     // Получить список операций по id магазина
     public static ArrayList<Object> getTransactionList(Shop shop) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         ArrayList<Object> transactions = new ArrayList<>();
@@ -263,7 +279,8 @@ public class SQL {
 
     // Получить список сотрудников
     public static ArrayList<Object> getEmployeeList() throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         ArrayList<Object> employees = new ArrayList<>();
@@ -281,10 +298,29 @@ public class SQL {
         conn.close();
         return employees;
     }
+    
+    // Получить список экземпляров
+    public static ArrayList<Object> getProductCopyList(String shopId, String productId) throws SQLException {
+        conn = DriverManager.getConnection(URL);
+        statement = conn.createStatement();
+
+        ArrayList<Object> copies = new ArrayList<>();
+
+        ResultSet data = statement.executeQuery("select * from product_copy where product_id = '%s' and shop_id = '%s'".formatted(productId, shopId));
+
+        while (data.next()) {
+            copies.add(new ProductCopy(data.getString("article"),
+                    data.getString("product_id"),
+                    data.getString("shop_id")));
+        }
+
+        conn.close();
+        return copies;
+    }
 
     // Получить id сотрудника по логину
     public static Employee getEmployee(String login) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         Employee employee = null;
@@ -306,17 +342,20 @@ public class SQL {
 
     // Добавить новую операцию
     public static void addTransaction(String type, String shopId, String productId, int amount, String responsible) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         statement.executeUpdate("insert into transaction(type, shop_id, product_id, amount, responsible) values('%s', '%s', '%s', '%s', '%s')".formatted(type, shopId, productId, amount, responsible));
+
+        statement.executeUpdate("");
 
         conn.close();
     }
 
     // Добавить сотрудника
     public static void addEmployee(String id, String shopId, String name, String post, int salary, String login) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         statement.executeUpdate("insert into employee(id, shop_id, full_name, post, salary, login) values('%s', '%s', '%s', '%s', '%s', '%s')".formatted(id, shopId, name, post, salary, login));
@@ -326,7 +365,8 @@ public class SQL {
 
     // Удалить товар
     public static void deleteProduct(String id) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         statement.executeUpdate("delete from product where id = '%s'".formatted(id));
@@ -336,7 +376,8 @@ public class SQL {
 
     // Удалить экземпляр товара
     public static void deleteProductCopy(ProductCopy copy) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         statement.executeUpdate("delete from product_copy where article = '%s'".formatted(copy.article));
@@ -346,9 +387,14 @@ public class SQL {
 
     // Удалить магазин
     public static void deleteShop(String id) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
+        // удалить все экземпляры этого магазина
+        statement.executeUpdate("delete from product_copy where shop_id = '%s'".formatted(id));
+
+        // удалить сам магазин
         statement.executeUpdate("delete from shop where id = '%s'".formatted(id));
 
         conn.close();
@@ -356,7 +402,8 @@ public class SQL {
 
     // Удалить сотрудника
     public static void deleteEmployee(String id) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         statement.executeUpdate("delete from employee where id = '%s'".formatted(id));
@@ -366,7 +413,7 @@ public class SQL {
 
     // Изменить товар
     public static void editProduct(Product p, String id) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         statement.executeUpdate("update `product` set `id` = '%s', `type` = '%s', `model` = '%s', `manufacturer` = '%s', `price` = '%s' where `id` = '%s'".formatted(p.id, p.type, p.model, p.manufacturer, p.price, id));
@@ -376,7 +423,8 @@ public class SQL {
 
     // Изменить магазин
     public static void editShop(Shop s, String id) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         statement.executeUpdate("update `shop` set `id` = '%s', `city` = '%s', `street` = '%s', `building` = '%s' where `id` = '%s'".formatted(s.id, s.city, s.street, s.building, id));
@@ -386,7 +434,8 @@ public class SQL {
 
     // Изменить информацию о сотруднике
     public static void editEmployee(Employee e, String id) throws SQLException {
-        conn = DriverManager.getConnection(URL, dbUsername, dbPassword);
+        
+        conn = DriverManager.getConnection(URL);
         statement = conn.createStatement();
 
         statement.executeUpdate("update `employee` set `id` = '%s', `shop_id` = '%s', `full_name` = '%s', `post` = '%s', `salary` = '%s' where `id` = '%s'".formatted(e.id, e.shopId, e.name, e.post, e.salary, id));

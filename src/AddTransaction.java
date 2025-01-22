@@ -107,6 +107,28 @@ public class AddTransaction extends Window {
                             Integer.parseInt(amountField.getText()),
                             SQL.getEmployee(login).getId());
 
+                    // добавление и удаление товаров
+                    if (typeBox.getSelectedItem().toString().equals("Продажа")) {
+                        // операция "Продажа"
+                        ArrayList<ProductCopy> articles = new ArrayList<>();
+                        for (Object obj : SQL.getProductCopyList(shop, productBox.getSelectedItem().toString())) {
+                            articles.add((ProductCopy) obj);
+                        }
+
+                        for (int i = 1; i <= Math.min(articles.size(), Integer.parseInt(amountField.getText())); i++) {
+                            SQL.deleteProductCopy(articles.get(i - 1));
+                        }
+                        // если кол-во товара в магазине меньше требуемого кол-ва
+                        if (articles.size() < Integer.parseInt(amountField.getText())) {
+                            new Notification("Число товаров меньше запрашиваемого кол-ва: было продано %s ед. вместо %s ед.".formatted(articles.size(), amountField.getText()), 0);
+                        }
+                    } else {
+                        // операции "Поставка" и "Возврат"
+                        for (int i = 0; i < Integer.parseInt(amountField.getText()); i++) {
+                            SQL.addProductCopy(shop, productBox.getSelectedItem().toString());
+                        }
+                    }
+
                     new Notification("Была совершена операция - " + typeBox.getSelectedItem().toString(), 1);
 
                     // очистка полей
